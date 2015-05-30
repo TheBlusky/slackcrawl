@@ -51,6 +51,7 @@ class SlackFilesCrawler:
             for a in page_soup.find("div", {"class": "pagination"}).find_all('a'):
                 if a.get_text() is not None and a.get_text().isdigit() and int(a.get_text()) > self.page_count:
                     self.page_count = int(a.get_text())
+                    self.paginated = True
             print "   -> got " + str(self.page_count) + " pages"
         print "[+] Retrieving files on page #" + str(page)
         json_line = ""
@@ -77,10 +78,10 @@ class SlackFileUtil:
         self.slack_session = slack_session
 
     def download(self, slack_file):
-        print "[+] Downloading " + (slack_file['name'] if 'name' in slack_file else "unnamed file")
         if not os.path.exists(self.slack_session.dir + "/files"):
             os.makedirs(self.slack_session.dir + "/files")
         try:
+            print "[+] Downloading ..."
             local_filename = self.slack_session.dir + "/files/" + str(slack_file['created']) + "_" + slack_file['name']
             r = self.slack_session.session.get(slack_file['url_private_download'], stream=True)
             with open(local_filename, 'wb') as f:

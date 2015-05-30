@@ -119,7 +119,7 @@ def main():
         return
 
     slack_files_crawler = SlackFilesCrawler(slack_session)
-    slack_files = slack_files_crawler.get_file_page(1)
+    slack_files = slack_files_crawler.get_all_files()
 
     file_util = SlackFileUtil(slack_session)
     for slack_file in slack_files:
